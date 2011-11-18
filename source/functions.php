@@ -1,8 +1,4 @@
 <?php
-//Writen by Joseph Redfern -  joseph[at]redfern[dot]me
-//http://blog.redfern.me/
-//This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
-//http://creativecommons.org/licenses/by-nc-sa/3.0/
 function pageTitle(){
 	if(isset($_SESSION['iid'])){
 		$institutionName = institutionNameFromIid($_SESSION['iid']);
@@ -166,6 +162,7 @@ function fullNameFromUid($uid){
 	}
 }
 
+/*
 function processInstitutionSelection(){
 	if(isset($_GET['iid'])){
 		$iid = mysql_real_escape_string($_GET['iid']);
@@ -177,6 +174,7 @@ function processInstitutionSelection(){
 		}
 	}
 }
+*/
 
 function processCourseSelection(){
 	if(isset($_GET['cid'])){
@@ -193,6 +191,9 @@ function processCourseSelection(){
 
 function pageHeader(){
 	$defaultheader = "<h1>NoteSlide <small>The online noticeboard for Universities</small></h1>";
+	if(isset($_GET['viewPost'])){
+		echo "<h3><a href=\"index.php\">< Back to Listings</a></h3>";
+	}else{
 	if(isset($_SESSION['iid'])){
 		$iid = mysql_real_escape_string($_SESSION['iid']);
 		if(institutionNameFromIid($iid)){
@@ -212,6 +213,7 @@ function pageHeader(){
 		
 	}else{
 		echo $defaultheader;
+	}
 	}
 }
 
@@ -291,7 +293,7 @@ function mainPage(){
 		session_destroy();
 	}else{
 		echo "<h2>Welcome to NoteSlide</h2>";
-		echo "<p>Welcome to NoteSlide, the Online message board for Universities across the UK. To get started, either Sign In, or choose your university from the list on the right.</p>";
+		echo "<p>Welcome to NoteSlide, the Online message board for Universities across the UK. To get started, either Sign In, or <a href=\"?register\">register for an account</a></p>";
 			}
 }
 }
@@ -311,7 +313,7 @@ function outputPostsByInstitution($iid, $n=10, $offset=0){
 }
 
 function outputSidebar(){
-	if(isset($_SESSION['iid'])){
+	/*if(isset($_SESSION['iid'])){
 		if(!isset($_SESSION['cid'])){ //CHANGE THIS LINE ONCE CID IS IMPLEMENTED!
 		
 		}else{
@@ -325,6 +327,6 @@ function outputSidebar(){
 	    echo "<h3>Choose your Uni</h3>";
 	    listInstitutions();
 	    echo "</div>";
-	}
+	}*/
 }
 ?>
