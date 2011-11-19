@@ -63,7 +63,7 @@ function loginArea(){
 		echo "<div class=\"pull-right loginarea\"><h5>Welcome, ".$_SESSION["fname"]." ".$_SESSION["lname"]."</h5></div>";
 	}else{
 		echo "<div class=\"pull-right\"><form action=\"?login\" method=\"POST\">
-            <input class=\"input-small\" type=\"username\" placeholder=\"Username\" name=\"username\">
+            <input class=\"input-small\" type=\"text\" placeholder=\"Username\" name=\"username\">
             <input class=\"input-small\" type=\"password\" placeholder=\"Password\" name=\"password\">
             <button class=\"btn\" type=\"submit\">Sign in</button>
           </form></div>";
@@ -73,7 +73,7 @@ function loginArea(){
 function doLogin(){
 	if(isset($_POST['username'])&&isset($_POST['password'])){
 		$username = mysql_real_escape_string($_POST['username']);
-		$password = md5(mysql_real_escape_string($_POST['password']));
+		$password = md5(mysql_real_escape_string($_POST['password']).SALT);
 		$query = "SELECT * FROM users WHERE username='$username' AND password='$password' LIMIT 1";
 		$result = mysql_query($query);
 		if(mysql_num_rows($result)>0){
@@ -152,6 +152,27 @@ function courseNameFromCid($cid){
 	}
 }
 
+function returnInstitutions(){
+	$query = "SELECT iid, name FROM institutions ORDER BY name";
+	$result = mysql_query($query);
+	$institutions = array();
+	while($row = mysql_fetch_array($result)){
+		$institutions[$row[0]]=$row[1];
+	}
+	return $institutions;
+}
+
+function usernameInUse($username){
+	$username = mysql_real_escape_string($username);
+	$query = "SELECT * FROM users WHERE username='$username'";
+	$result = mysql_query($query);
+	if(mysql_num_rows($result)==0){
+		return false;
+	}else{
+		return true;
+	}
+}
+
 function fullNameFromUid($uid){
 	$uid = mysql_real_escape_string($uid);
 	$query = "SELECT fname, lname FROM users WHERE uid=$uid";
@@ -159,6 +180,17 @@ function fullNameFromUid($uid){
 	if(mysql_num_rows($result)>0){
 		$row = mysql_fetch_array($result);
 		return $row["fname"]." ".$row["lname"];
+	}
+}
+
+function emailInUse($email){
+	$email = mysql_real_escape_string($email);
+	$query = "SELECT * FROM users WHERE email='$email'";
+	$result = mysql_query($query);
+	if(mysql_num_rows($result)==0){
+		return false;
+	}else{
+		return true;
 	}
 }
 
@@ -292,12 +324,16 @@ function mainPage(){
 		echo "<p>The username/password combination you entered is invalid. Please try again!</p>";
 		session_destroy();
 	}else{
+		if(isset($_GET['register'])){
+			include "includes/registration.php";
+		}else{
 		echo "<h2>Welcome to NoteSlide</h2>";
 		echo "<p>Welcome to NoteSlide, the Online message board for Universities across the UK. To get started, either Sign In, or <a href=\"?register\">register for an account</a></p>";
 			}
+			
 }
 }
-
+}
 
 function outputPostsByInstitution($iid, $n=10, $offset=0){
 	$n = mysql_real_escape_string($n);
