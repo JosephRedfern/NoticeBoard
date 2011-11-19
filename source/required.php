@@ -1,6 +1,5 @@
 <?php
 session_start();
-define("INCLUDED", True); //Prevent direct access to files be checking if INCLUDED is defined as true. 
 include "settings.php";
 include "functions.php";
 $conn = mysql_connect($mysql_server, $mysql_user, $mysql_password) OR DIE("Uh-oh! Database Connection Error:<p><pre>".mysql_error()."</pre></p>");
