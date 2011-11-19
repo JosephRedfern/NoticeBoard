@@ -28,12 +28,12 @@ function sanityChecks(){
 
 function showVariableMenuItems(){
 	if(isset($_SESSION['uid'])){
-		echo "<li><a href=\"?post\">Add Post</a></li>";
+		echo "<li><a href=\"?addPost\">Add Post</a></li>";
 		echo "<li><a href=\"#myaccount\">My Account</a></li>";
 		echo "<li><a href=\"?logout\">Logout</a></li>";
 	}else{
 		echo "<li><a href=\"?what\">What is this?</a></li>";
-		echo "<li><a href=\"#register\">Register</a></li>";
+		echo "<li><a href=\"?register\">Register</a></li>";
 	}
 }
 
@@ -80,7 +80,7 @@ function doLogin(){
 		$row = mysql_fetch_assoc($result);
 			$_SESSION["uid"] = $row["uid"];
 			$_SESSION["iid"] = $row["iid"];
-			$_SESSION["cid"] = $row["cid"];
+			//$_SESSION["cid"] = $row["cid"]; //not implemented
 			$_SESSION["username"] = $row["username"];
 			$_SESSION["fname"] = $row["fname"];
 			$_SESSION["lname"] = $row["lname"];
@@ -310,12 +310,16 @@ function cidIsValid($cid){
 
 function mainPage(){
 	if(isset($_SESSION['iid'])){
-		if(iidIsValid($_SESSION['iid'])&&!isset($_GET['viewPost'])){
+		if(iidIsValid($_SESSION['iid'])&&!isset($_GET['viewPost'])&&!isset($_GET['addPost'])){
 			echo "<h2>Latest Posts</h2>";
 			outputPostsByInstitution($_SESSION['iid']);
 		}else{
 			if(isset($_GET['viewPost'])){
 				viewPost($_GET['viewPost']);
+			}else{
+				if(isset($_GET['addPost'])){
+					include "includes/post.php";
+				}
 			}
 		}
 	}else{
@@ -338,11 +342,11 @@ function mainPage(){
 function outputPostsByInstitution($iid, $n=10, $offset=0){
 	$n = mysql_real_escape_string($n);
 	$iid = mysql_real_escape_string($iid);
-	$query = "SELECT * FROM posts WHERE visible=1 AND iid=$iid LIMIT $offset,$n";
+	$query = "SELECT * FROM posts WHERE visible=1 AND iid=$iid ORDER BY `timestamp` DESC LIMIT $offset,$n";
 	$result = mysql_query($query) OR DIE(mysql_error());
 	while($post = mysql_fetch_array($result)){
 		echo "<p class=\"post\">";
-		echo "<h3><a href=\"?viewPost=".$post['pid']."\">".$post['title']."</a></h3>";
+		echo "<h3><a href=\"?viewPost=".$post['pid']."\">".$post['title']."</a><small> - ".date("j/n/y", strtotime($post['timestamp']))."</small></h3>";
 		echo "<small>".$post['description']."</small>";
 		echo "</p>";
 	}

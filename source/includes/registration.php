@@ -40,5 +40,8 @@ if(!defined("INCLUDED")){
 			echo "<p class=\"alert-message warning\">The username you chose is already in use... Try picking another!</p>";
 			include "registrationform.php";
 		}
+	}else{
+			echo "<p class=\"alert-message warning\">Please fill in all of the fields - Thanks!</p>";
+			include "includes/registrationform.php";		
 	}
 }?>

@@ -83,7 +83,7 @@
         <div class="container">
           <a class="brand" href="index.php">NoteSlide</a>
           <ul class="nav">
-            <li class="active"><a href="#">Home</a></li>
+            <li><a href="index.php">Home</a></li>
            <?php showVariableMenuItems();?>
           </ul>
           <?php loginArea(); ?>
@@ -98,7 +98,7 @@
           <?php pageHeader(); ?>
         </div>
         <div class="row">
-          <div class="span10">
+          <div class="fullwidth">
             <?php
             mainPage();
             ?>

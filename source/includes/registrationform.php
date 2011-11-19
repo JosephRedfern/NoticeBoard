@@ -3,6 +3,7 @@ if(!defined("INCLUDED")){
 	die("No direct access, you sneaky sneaky sneakster.");
 }
 ?>
+<h2>Register</h2>
 <form action="?register" name="registerform" method="POST"><fieldset>
 <label for="username">Username  </label> <input type="text" name="username" id="username"/><br /><br />
 <label for="fname">First Name  </label> <input type="text" name="fname" id="fname"/><br /><br />
